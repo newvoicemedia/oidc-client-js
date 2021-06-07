@@ -203,9 +203,12 @@ function add_version(){
 }
 
 function build_jsrsasign(){
-  return gulp.src(files)
-      .pipe(concat('jsrsasign.js'))
-      .pipe(gulp.dest('jsrsasign/dist/'));
+  return gulp.src('node_modules/jsrsasign/lib/jsrsasign-all-min.js')
+    .pipe(rename('jsrsasign.js'))
+    .pipe(gulp.dest('jsrsasign/dist'));
+  // return gulp.src(files)
+  //     .pipe(concat('jsrsasign.js'))
+  //     .pipe(gulp.dest('jsrsasign/dist/'));
 }
 
 function copy_ts(){
