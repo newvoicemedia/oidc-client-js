@@ -203,8 +203,7 @@ function add_version(){
 }
 
 function build_jsrsasign(){
-  return gulp.src('node_modules/jsrsasign/lib/jsrsasign-all-min.js')
-    .pipe(rename('jsrsasign.js'))
+  return gulp.src('node_modules/jsrsasign/lib/jsrsasign.js')
     .pipe(gulp.dest('jsrsasign/dist'));
   // return gulp.src(files)
   //     .pipe(concat('jsrsasign.js'))
