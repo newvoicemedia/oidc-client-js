@@ -1,5 +1,5 @@
 {
-  "name": "oidc-client-vcc",
+  "name": "oidc-client-js",
   "version": "1.11.5",
   "description": "OpenID Connect (OIDC) & OAuth2 client library",
   "main": "lib/oidc-client.min.js",
