@@ -8,10 +8,6 @@
 
 
 
-@version = JSON.parse(File.read('./package.json'))['version']
-@build_version = ENV['BUILD_VERSION'] || 'dev'
-@project_name = ENV['CI_SERVICE_NAME'] || 'oidc-client-js'
-@base_file_name = "#{@project_name}-#{@build_version}"
 @artifacts_dir = 'artifacts'
 
 # build ------------------------------------------------------------------------
