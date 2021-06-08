@@ -1,0 +1,26 @@
+---
+name: oidc-client-js
+repo: oidc-client-js
+runtime: nodejs
+maintainer:
+  name: CCT Agent Experience
+  email: cct_agentx@vonage.com
+build:
+  ignore:
+    - artifacts/
+  commands:
+    - desc: build migrated commands
+      run: |
+        bundle exec rake build
+      against: build
+package:
+  commands:
+    - desc: package migrated commands
+      run: |
+        bundle exec rake package
+      against: build
+targets:
+  - NPM
+ci:
+  job_path: npm-packages/oidc-client-js
+rendered_with: 5.4.1

@@ -1,0 +1,18 @@
+{
+  "jobs": [
+    {
+      "name": "npm-packages/oidc-client-js",
+      "repo": "oidc-client-js",
+      "branch": "master",
+      "template": "CI_BUILD_APP_GENERATED_GITHUB_TEMPLATE",
+      "isAreaRepo": false,
+      "applicationPath": ".",
+      "buildslave": "docker18builds",
+      "promotions": [
+        {
+          "name": "Push NPM Package"
+        }
+      ]
+    }
+  ]
+}

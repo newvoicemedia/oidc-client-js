@@ -1,0 +1,33 @@
+# Auto-generated file by Vonage CLI
+
+FROM 662182053957.dkr.ecr.eu-west-1.amazonaws.com/docker-base-images/node-build-tools:14.17.0-alpine3.13-b31
+
+LABEL maintainer="CCT Agent Experience <cct_agentx@vonage.com>"
+
+ENV RUNNING_IN_DOCKER true
+
+ARG VOLTA_NPM_TOKEN
+# https://stackoverflow.com/questions/52015748/npm-failed-to-replace-env-in-config-npm-token
+# This solution is cleaner. The link is to provide context on why we need this.
+ENV VOLTA_NPM_TOKEN=$VOLTA_NPM_TOKEN
+
+ARG ARTIFACTORY_URL
+ARG ARTIFACTORY_USER
+ARG ARTIFACTORY_SECRET
+
+ENV HOME /home
+WORKDIR $HOME
+
+COPY Gemfile.lock ./
+COPY Gemfile ./
+RUN bundler install
+
+COPY package.cache.json package.json
+COPY yarn.lock .
+COPY .npmrc .
+
+RUN /install-npm-packages.sh
+
+COPY . .
+
+ENTRYPOINT [ "/entrypoint.sh" ]

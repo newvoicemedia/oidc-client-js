@@ -1,0 +1,26 @@
+# Auto-generated file by Vonage CLI
+---
+version: '3.7'
+services:
+
+  build:
+    container_name: ${CI_DOCKER_CONTAINER}
+    build:
+      context: ./
+      dockerfile: Dockerfile.tools
+      args:
+        - ARTIFACTORY_ADDRESS=${ARTIFACTORY_ADDRESS}
+        - ARTIFACTORY_URL=${ARTIFACTORY_URL}
+        - ARTIFACTORY_USER=${ARTIFACTORY_USER}
+        - ARTIFACTORY_SECRET=${ARTIFACTORY_SECRET}
+        - VOLTA_NPM_TOKEN=${VOLTA_NPM_TOKEN}
+    environment:
+      - BUILD_VERSION=${BUILD_VERSION}
+      - CI_BUILD_NUMBER=${CI_BUILD_NUMBER}
+      - GIT_COMMIT_HASH=${GIT_COMMIT_HASH}
+      - ARTIFACTORY_ADDRESS=${ARTIFACTORY_ADDRESS}
+      - ARTIFACTORY_URL=${ARTIFACTORY_URL}
+      - ARTIFACTORY_USER=${ARTIFACTORY_USER}
+      - ARTIFACTORY_SECRET=${ARTIFACTORY_SECRET}
+      - VOLTA_NPM_TOKEN=${VOLTA_NPM_TOKEN}
+    stdin_open: true

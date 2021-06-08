@@ -1,0 +1,42 @@
+# Auto-generated file by Vonage CLI
+
+# SCM folders
+.git
+.svn
+
+# VS Code / Visual Studio folders
+.vscode
+**/.vs/
+
+# Misc
+dist/
+.cache
+.dockerignore
+pipeline/
+.message-schema/
+.aws-infrastructure/
+Dockerfile*
+bin/
+obj/
+docker-compose*.yml
+packages/
+node_modules/
+rakelib/
+Rakefile.*
+Gemfile.CI*
+xunit.xml
+**/test_results/
+**/test_output/
+*.Test*.results.*
+# CLI tests still relly on it's own project.yml
+project.yml
+project.config.yml
+
+# MacOS
+.DS_Store
+
+# Project build ignores
+artifacts/
+
+# Testing tools/artifacts
+coverage/

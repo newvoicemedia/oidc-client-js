@@ -1,0 +1,134 @@
+# Auto-generated file by Vonage CLI
+
+require 'English'
+require 'fileutils'
+require 'json'
+require 'open3'
+require 'etc'
+
+@artifacts_dir = 'artifacts'
+@project_runtime = 'nodejs'
+@build_container_name = nil
+@git_commit_hash = nil
+@is_ci = !ENV['CI_BUILD_NUMBER'].nil?
+
+require_relative '.tasks/load_environment_vars'
+require_relative '.tasks/version'
+
+Dir['./.tasks/*.rb']
+  .reject { |file| %w[./.tasks/load_environment_vars.rb ./.tasks/version.rb].include?(file) }
+  .sort
+  .each { |file| require_relative file }
+
+# TASK: version ################################################################
+# Defined/loaded in ./tasks/version.rb.
+
+# TASK: build ##################################################################
+
+desc 'Build build image, project/service and start build container'
+task build: %w[ci:load_environment_vars ci:print_environment_vars ci:print_warnings] do
+  start_time = Time.now.to_f
+  puts '> Build for oidc-client-js starting...'
+
+  begin
+    Rake::Task['docker:validate_compose_files'].invoke
+    Rake::Task['ci:npm_build_prereqs'].invoke
+    Rake::Task['ci:write_cache_package_file'].invoke if Rake::Task.task_defined?('ci:write_cache_package_file')
+    Rake::Task['docker:login_to_ecr'].invoke unless @is_ci
+    puts '> ... starting build container and deps'
+    sh "docker-compose up -d --build build"
+
+    puts 'build migrated commands'
+    sh('docker-compose exec -T build bundle exec rake build')
+
+    result_and_metrics('Build', 'build', start_time, false)
+  rescue
+    puts $?
+    result_and_metrics('Build', 'build', start_time, true)
+    raise
+  end
+end
+
+# TASK: test ###################################################################
+
+desc 'Run unit tests and copy results files'
+task test: %w[ci:load_environment_vars ci:print_environment_vars ci:print_warnings] do
+  start_time = Time.now.to_f
+  puts '> No unit tests'
+end
+
+# TASK: package ################################################################
+
+desc 'Package'
+task package: %w[ci:load_environment_vars ci:print_environment_vars ci:print_warnings] do
+  start_time = Time.now.to_f
+
+  # Clear out artifacts folder to prevent picking up previous builds
+  FileUtils.rm_rf(@artifacts_dir) if Dir.exist?(@artifacts_dir)
+  FileUtils.mkdir(@artifacts_dir)
+
+  puts '> Package for oidc-client-js starting...'
+
+  begin
+    puts 'package migrated commands'
+    sh('docker-compose exec -T build bundle exec rake package')
+    run_copy_artifacts_commands
+
+    result_and_metrics('Package', 'package', start_time, false)
+  rescue
+    puts $?
+    result_and_metrics('Package', 'package', start_time, true)
+    raise
+  end
+end
+
+def run_copy_artifacts_commands
+  sh("docker cp #{@build_container_name}:/home/artifacts .")
+end
+
+# TASK: test_integration #######################################################
+
+desc 'Run integration tests and copy results artifact'
+task test_integration: %w[ci:load_environment_vars ci:print_environment_vars ci:print_warnings] do
+  start_time = Time.now.to_f
+  puts '> No integration tests'
+end
+
+# TASK: cleanup ################################################################
+
+desc 'Cleanup'
+task cleanup: %w[ci:load_environment_vars ci:print_environment_vars ci:print_warnings] do
+  start_time = Time.now.to_f
+  puts '> Cleanup for oidc-client-js starting...'
+
+  begin
+    Rake::Task['docker:dump_logs'].invoke
+    sh "docker-compose down -v"
+
+    result_and_metrics('Cleanup', 'cleanup', start_time, false)
+  rescue
+    puts $?
+    result_and_metrics('Cleanup', 'cleanup', start_time, true)
+    raise
+  end
+end
+
+desc 'Cleanup (non-docker targets)'
+task :clean_container do
+  Rake::Task[:cleanup].invoke
+end
+
+# TASKS: all/default ###########################################################
+
+desc 'Run version, build, test, package, test_integration and cleanup'
+task :all do
+  Rake::Task[:version].invoke
+  Rake::Task[:build].invoke
+  Rake::Task[:test].invoke
+  Rake::Task[:package].invoke
+  Rake::Task[:test_integration].invoke
+  Rake::Task[:cleanup].invoke
+end
+
+desc 'Default (version, build, test, package, test_integration and cleanup)'
+task default: [:all]
