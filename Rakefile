@@ -26,5 +26,7 @@ task :package do
   FileUtils.mkdir(@artifacts_dir)
   FileUtils.cp_r("dist/.", "#{@artifacts_dir}/dist/", verbose: true)
   FileUtils.cp_r("lib/.","#{@artifacts_dir}/lib/", verbose: true)
+  FileUtils.cp_r("index.d.ts","#{@artifacts_dir}/.", verbose: true)
+  FileUtils.cp_r("index.js","#{@artifacts_dir}/.", verbose: true)
   FileUtils.cp_r("package.json", "#{@artifacts_dir}/.", verbose: true)
 end
